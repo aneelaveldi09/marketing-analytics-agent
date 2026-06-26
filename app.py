@@ -6,8 +6,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import streamlit as st
-from src.vector_store import index_exists, index_size
+from src.vector_store import index_exists, index_size, build_index
 from src.agent import retrieve, ask_stream, get_followups
+from src.data_loader import load_corpus
+from src.embeddings import embed_texts
 
 st.set_page_config(
     page_title="Marketing Analytics AI",
@@ -365,13 +367,21 @@ with st.sidebar:
             st.session_state[k] = {} if k in ("meta","followups") else ([] if k=="messages" else None)
         st.rerun()
 
-# ── Guards ────────────────────────────────────────────────────────────────────
+# ── Auto-build index if missing ───────────────────────────────────────────────
 
 if not ready:
-    st.error("Run `python pipeline.py` to build the knowledge base first.")
-    st.stop()
+    with st.status("Building knowledge base for the first time. This takes a few minutes...", expanded=True) as status:
+        st.write("Fetching Wikipedia articles and arXiv research papers...")
+        chunks = load_corpus(use_cache=False)
+        st.write(f"Embedding {len(chunks)} chunks...")
+        embeddings = embed_texts([c["text"] for c in chunks])
+        st.write("Building FAISS index...")
+        build_index(chunks, embeddings)
+        status.update(label="Knowledge base ready.", state="complete")
+    st.rerun()
+
 if not os.getenv("XAI_API_KEY"):
-    st.error("Add XAI_API_KEY to your .env file.")
+    st.error("Add XAI_API_KEY to Streamlit Cloud secrets (Settings > Secrets).")
     st.stop()
 
 # ── Hero ──────────────────────────────────────────────────────────────────────
