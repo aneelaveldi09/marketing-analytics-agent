@@ -13,7 +13,7 @@ from src.embeddings import embed_texts
 
 st.set_page_config(
     page_title="Marketing Analytics AI",
-    page_icon="📊",
+    page_icon="◆",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -308,12 +308,12 @@ section[data-testid="stSidebar"] > div:first-child { padding-top: 0; }
 # ── Data ──────────────────────────────────────────────────────────────────────
 
 EXAMPLES = [
-    {"icon": "🔀", "cat": "Attribution",   "q": "How does multi-touch attribution work and which model is most accurate?"},
-    {"icon": "📉", "cat": "Churn",         "q": "What ML models best predict customer churn and what features matter most?"},
-    {"icon": "💰", "cat": "Influencer ROI","q": "How do you measure real influencer marketing ROI beyond vanity metrics?"},
-    {"icon": "🧪", "cat": "A/B Testing",   "q": "How do you design an A/B test that's actually statistically valid?"},
-    {"icon": "🧩", "cat": "Segmentation",  "q": "What clustering approaches work best for customer segmentation?"},
-    {"icon": "🔮", "cat": "Prediction",    "q": "How are LLMs being used in marketing analytics today?"},
+    {"cat": "Attribution",   "q": "How does multi-touch attribution work and which model is most accurate?"},
+    {"cat": "Churn",         "q": "What ML models best predict customer churn and what features matter most?"},
+    {"cat": "Influencer ROI","q": "How do you measure real influencer marketing ROI beyond vanity metrics?"},
+    {"cat": "A/B Testing",   "q": "How do you design an A/B test that's actually statistically valid?"},
+    {"cat": "Segmentation",  "q": "What clustering approaches work best for customer segmentation?"},
+    {"cat": "LLMs",          "q": "How are LLMs being used in marketing analytics today?"},
 ]
 
 WIKI_PILLS  = ["A/B Testing","Attribution","Churn","CLV","CRO","MMM","Influencer",
@@ -332,7 +332,7 @@ for k, v in [("messages",[]),("meta",{}),("followups",{}),("pending",None)]:
 with st.sidebar:
     st.markdown("""
     <div class='sb-logo'>
-      <span class='sb-logo-icon'>📊</span>
+      <span class='sb-logo-icon'>◆</span>
       <div class='sb-logo-title'>Marketing Analytics AI</div>
       <div class='sb-logo-sub'>RAG Agent · Grok-3 · by Aneela Veldi</div>
     </div>
@@ -388,18 +388,18 @@ if not os.getenv("XAI_API_KEY"):
 
 st.markdown("""
 <div class='hero'>
-  <div class='hero-badge'>📊 AI Agent · RAG · Grok-3</div>
+  <div class='hero-badge'>◆ AI Agent &nbsp;·&nbsp; RAG &nbsp;·&nbsp; Grok-3</div>
   <div class='hero-title'>Marketing Analytics<br><span>Intelligence Agent</span></div>
   <div class='hero-sub'>
-    Ask anything grounded in real research — Wikipedia knowledge base + arXiv papers
+    Ask anything grounded in real research. Wikipedia knowledge base + arXiv papers
     on ML for marketing, attribution, churn, segmentation, and NLP.
   </div>
   <div class='hero-pills'>
-    <span class='hero-pill'>📄 Wikipedia KB</span>
-    <span class='hero-pill'>🔬 arXiv Research Papers</span>
-    <span class='hero-pill'>⚡ Grok-3</span>
-    <span class='hero-pill'>🔍 FAISS Semantic Search</span>
-    <span class='hero-pill'>🧠 sentence-transformers</span>
+    <span class='hero-pill'>Wikipedia KB</span>
+    <span class='hero-pill'>arXiv Research Papers</span>
+    <span class='hero-pill'>Grok-3</span>
+    <span class='hero-pill'>FAISS Semantic Search</span>
+    <span class='hero-pill'>sentence-transformers</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -450,7 +450,7 @@ if not st.session_state.messages:
     for i, ex in enumerate(EXAMPLES):
         with cols[i % 3]:
             if st.button(
-                f"{ex['icon']}  **{ex['cat']}**\n\n{ex['q']}",
+                f"**{ex['cat']}**\n\n{ex['q']}",
                 key=f"eg_{i}",
                 use_container_width=True,
             ):
@@ -466,7 +466,7 @@ for i, msg in enumerate(st.session_state.messages):
         if msg["role"] == "assistant":
             meta = st.session_state.meta.get(i, {})
             if show_sources and meta.get("chunks"):
-                with st.expander(f"📚 {len(meta['chunks'])} sources retrieved", expanded=False):
+                with st.expander(f"◈ {len(meta['chunks'])} sources retrieved", expanded=False):
                     render_sources(meta["chunks"], meta["scores"])
             if meta.get("followups"):
                 render_followups(meta["followups"], f"h{i}")
@@ -485,7 +485,7 @@ if prompt:
         chunks, scores = retrieve(prompt, k=top_k)
 
         if show_sources:
-            with st.expander(f"📚 {len(chunks)} sources retrieved", expanded=True):
+            with st.expander(f"◈ {len(chunks)} sources retrieved", expanded=True):
                 render_sources(chunks, scores)
 
         history = [{"role": m["role"], "content": m["content"]}
