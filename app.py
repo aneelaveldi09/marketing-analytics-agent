@@ -6,14 +6,18 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import streamlit as st
+from PIL import Image
 from src.vector_store import index_exists, index_size, build_index
 from src.agent import retrieve, ask_stream, get_followups
 from src.data_loader import load_corpus
 from src.embeddings import embed_texts
 
+_favicon_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "favicon.png")
+_favicon = Image.open(_favicon_path) if os.path.exists(_favicon_path) else "◆"
+
 st.set_page_config(
     page_title="Marketing Analytics AI",
-    page_icon="◆",
+    page_icon=_favicon,
     layout="wide",
     initial_sidebar_state="expanded",
 )
